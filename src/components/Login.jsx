@@ -3,25 +3,21 @@ import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+export const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (passwordConfirmRef.current.value !== passwordRef.current.value) {
-      return setError("Password do not match");
-    }
 
     try {
       setError("");
       setLoading(true);
-      await signUp(emailRef.current.value, passwordRef.current.value);
+      await login(emailRef.current.value, passwordRef.current.value);
       navigate("/");
     } catch (e) {
       setError("Failed to create an account");
@@ -34,7 +30,7 @@ export const Signup = () => {
     <>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
+          <h2 className="text-center mb-4">Log In</h2>
           {error != "" && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
@@ -49,22 +45,17 @@ export const Signup = () => {
                 ref={passwordRef}
               ></Form.Control>
             </Form.Group>
-            <Form.Group id="confirm-password">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                ref={passwordConfirmRef}
-              ></Form.Control>
-            </Form.Group>
             <Button type="submit" className="w-100 mt-4" disabled={loading}>
-              Sign Up
+              Log In
             </Button>
           </Form>
+          <div className="w-100 text-center mt-2">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Already have an account? <Link to="/login">Log In</Link>
+        Need an account? <Link to="/signup">Sign Up</Link>
       </div>
     </>
   );
