@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { Card, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { CenteredContainer } from "./CenteredContainer";
 
-const Dashboard = () => {
+const Profile = () => {
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Dashboard = () => {
   }
 
   return (
-    <>
+    <CenteredContainer>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Profile</h2>
@@ -35,7 +36,7 @@ const Dashboard = () => {
           Logout
         </Link>
       </div>
-    </>
+    </CenteredContainer>
   );
 };
-export default Dashboard;
+export default Profile;

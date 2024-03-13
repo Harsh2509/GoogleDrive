@@ -1,20 +1,20 @@
 // import React from "react";
 
 import { AuthProvider } from "../context/AuthContext";
-import { Signup } from "./Signup";
-import { Container } from "react-bootstrap";
+import { Signup } from "./authentication/Signup";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./Login";
-import { PrivateRoute } from "./PrivateRoute";
-import Dashboard from "./Dashboard";
-import { ForgotPassword } from "./ForgotPassword";
+import { Login } from "./authentication/Login";
+import { PrivateRoute } from "./authentication/PrivateRoute";
+import Profile from "./authentication/Profile";
+import { ForgotPassword } from "./authentication/ForgotPassword";
+import { Dashboard } from "./google-drive/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/user",
     element: (
       <PrivateRoute>
-        <Dashboard />
+        <Profile />
       </PrivateRoute>
     ),
   },
@@ -30,19 +30,16 @@ const router = createBrowserRouter([
     path: "/forgot-password",
     element: <ForgotPassword />,
   },
+  {
+    path: "/",
+    element: <Dashboard />,
+  },
 ]);
 
 function App() {
   return (
     <AuthProvider>
-      <Container
-        className="d-flex align-items-center justify-content-center"
-        style={{ height: "100vh" }}
-      >
-        <div className="w-100" style={{ maxWidth: "400px" }}>
-          <RouterProvider router={router}></RouterProvider>
-        </div>
-      </Container>
+      <RouterProvider router={router}></RouterProvider>
     </AuthProvider>
   );
 }

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_API_KEY,
@@ -10,5 +11,20 @@ const app = initializeApp({
   appId: import.meta.env.VITE_APP_ID,
 });
 
+const firestore = getFirestore(app);
+export const database = {
+  addFolder: async ({ name, userId, createdAt }) => {
+    try {
+      const doc = await addDoc(collection(firestore, "folders"), {
+        name,
+        userId,
+        createdAt,
+      });
+      console.log(`Doc Id: ${doc.id}`);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+};
 export const auth = getAuth(app);
 export default app;
