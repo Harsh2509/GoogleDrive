@@ -1,6 +1,17 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, addDoc, collection } from "firebase/firestore";
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_API_KEY,
@@ -13,10 +24,11 @@ const app = initializeApp({
 
 const firestore = getFirestore(app);
 export const database = {
-  addFolder: async ({ name, userId, createdAt }) => {
+  addFolder: async ({ name, userId, createdAt, parentId }) => {
     try {
       const doc = await addDoc(collection(firestore, "folders"), {
         name,
+        parentId,
         userId,
         createdAt,
       });
@@ -24,6 +36,25 @@ export const database = {
     } catch (e) {
       console.error(e);
     }
+  },
+  getFolder: async (folderId) => {
+    const docRef = doc(firestore, "folders", folderId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { ...docSnap.data(), id: folderId };
+    } else {
+      console.log("No such folder!");
+    }
+  },
+  getByParentId: (parentId, userId, snapShotFunction) => {
+    const q = query(
+      collection(firestore, "folders"),
+      where("parentId", "==", parentId),
+      where("userId", "==", userId),
+      orderBy("createdAt")
+    );
+    return onSnapshot(q, snapShotFunction);
   },
 };
 export const auth = getAuth(app);
