@@ -34,6 +34,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Dashboard />,
   },
+  {
+    path: "/folder/:folderId",
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
+  },
 ]);
 
 function App() {

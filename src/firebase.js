@@ -24,12 +24,13 @@ const app = initializeApp({
 
 const firestore = getFirestore(app);
 export const database = {
-  addFolder: async ({ name, userId, createdAt, parentId }) => {
+  addFolder: async ({ name, userId, createdAt, parentId, path }) => {
     try {
       const doc = await addDoc(collection(firestore, "folders"), {
         name,
         parentId,
         userId,
+        path,
         createdAt,
       });
       console.log(`Doc Id: ${doc.id}`);
