@@ -4,6 +4,7 @@ import { useFolder } from "../../hooks/useFolder";
 import Folder from "./Folder";
 import { useParams, useLocation } from "react-router-dom";
 import FolderBreadcrumbs from "./FolderBreadcrumbs";
+import AddFileButton from "./AddFileButton";
 
 export const Dashboard = () => {
   const { folderId } = useParams();
@@ -14,6 +15,7 @@ export const Dashboard = () => {
       <Navbar />
       <div className="d-flex align-items-center px-3 my-2">
         <FolderBreadcrumbs currentFolder={folder} />
+        <AddFileButton currentFolder={folder} />
         <AddFolderButton currentFolder={folder} />
       </div>
       {childFolders && childFolders.length > 0 && (

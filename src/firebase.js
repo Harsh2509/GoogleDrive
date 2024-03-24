@@ -8,10 +8,16 @@ import {
   getDoc,
   query,
   where,
-  getDocs,
   orderBy,
   onSnapshot,
 } from "firebase/firestore";
+
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_API_KEY,
@@ -33,7 +39,7 @@ export const database = {
         path,
         createdAt,
       });
-      console.log(`Doc Id: ${doc.id}`);
+      // console.log(`Doc Id: ${doc.id}`);
     } catch (e) {
       console.error(e);
     }
@@ -57,6 +63,46 @@ export const database = {
     );
     return onSnapshot(q, snapShotFunction);
   },
+  addFile: async ({ url, fname, createAt, folderId, userId }) => {
+    await addDoc(collection(firestore, "files"), {
+      url,
+      name: fname,
+      createAt,
+      folderId,
+      userId,
+    });
+  },
 };
+
+export const storage = getStorage(app);
+
+export const fileStorage = {
+  addFile: (filePath, file, currentUser, currentFolder) => {
+    const fileRef = ref(storage, `/files/${currentUser.uid}/${filePath}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    // Handling state changes and completion of the upload task
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.error("Error uploading file:", error);
+      },
+      () => {
+        // Upload completed successfully
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          database.addFile({
+            url,
+            fname: file.name,
+            createAt: new Date(),
+            folderId: currentFolder.id,
+            userId: currentUser.uid,
+          });
+        });
+      }
+    );
+  },
+};
+
 export const auth = getAuth(app);
 export default app;
