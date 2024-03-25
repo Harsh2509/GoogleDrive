@@ -5,11 +5,15 @@ import Folder from "./Folder";
 import { useParams, useLocation } from "react-router-dom";
 import FolderBreadcrumbs from "./FolderBreadcrumbs";
 import AddFileButton from "./AddFileButton";
+import File from "./File";
 
 export const Dashboard = () => {
   const { folderId } = useParams();
   const location = useLocation();
-  const { folder, childFolders } = useFolder(folderId, location.state?.folder);
+  const { folder, childFolders, childFiles } = useFolder(
+    folderId,
+    location.state?.folder
+  );
   return (
     <>
       <Navbar />
@@ -27,6 +31,22 @@ export const Dashboard = () => {
               className="p-2"
             >
               <Folder folder={childFolder} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {childFolders.length > 0 && childFiles.length > 0 && <hr />}
+
+      {childFiles && childFiles.length > 0 && (
+        <div className="d-flex flex-wrap">
+          {childFiles.map((childFile) => (
+            <div
+              key={childFile.id}
+              style={{ maxWidth: "250px" }}
+              className="p-2"
+            >
+              <File file={childFile} />
             </div>
           ))}
         </div>

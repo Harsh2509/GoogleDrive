@@ -39,7 +39,6 @@ export const database = {
         path,
         createdAt,
       });
-      // console.log(`Doc Id: ${doc.id}`);
     } catch (e) {
       console.error(e);
     }
@@ -63,14 +62,25 @@ export const database = {
     );
     return onSnapshot(q, snapShotFunction);
   },
-  addFile: async ({ url, fname, createAt, folderId, userId }) => {
-    await addDoc(collection(firestore, "files"), {
+  addFile: async ({ url, fname, createdAt, folderId, userId }) => {
+    console.log(createdAt);
+    const doc = await addDoc(collection(firestore, "files"), {
       url,
       name: fname,
-      createAt,
+      createdAt,
       folderId,
       userId,
     });
+    console.log(doc);
+  },
+  getFilesByParentId: (folderId, userId, snapShotFunction) => {
+    const q = query(
+      collection(firestore, "files"),
+      where("folderId", "==", folderId),
+      where("userId", "==", userId),
+      orderBy("createdAt")
+    );
+    return onSnapshot(q, snapShotFunction);
   },
 };
 
@@ -94,7 +104,7 @@ export const fileStorage = {
           database.addFile({
             url,
             fname: file.name,
-            createAt: new Date(),
+            createdAt: new Date(),
             folderId: currentFolder.id,
             userId: currentUser.uid,
           });

@@ -19,13 +19,15 @@ export default function AddFileButton({ currentFolder }) {
     fileStorage.addFile(filePath, file, currentUser, currentFolder);
   }
   return (
-    <label className="btn btn-outline-success btn-sm mx-3 m-0">
-      <FontAwesomeIcon icon={faFileUpload}></FontAwesomeIcon>
-      <input
-        type="file"
-        onChange={handleUpload}
-        style={{ opacity: 0, position: "absolute", left: "-9999px" }}
-      />
-    </label>
+    <>
+      <label className="btn btn-outline-success btn-sm mx-3 m-0">
+        <FontAwesomeIcon icon={faFileUpload}></FontAwesomeIcon>
+        <input
+          type="file"
+          onChange={handleUpload}
+          style={{ opacity: 0, position: "absolute", left: "-9999px" }}
+        />
+      </label>
+    </>
   );
 }
